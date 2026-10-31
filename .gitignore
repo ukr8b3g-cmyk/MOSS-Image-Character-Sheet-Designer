@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+node_modules/
+.venv/
+*.log
+PROJECT_STATE.md
+verification/*
+!verification/layout_golden_cases.json
+docs/*review-*.md
+examples/* - H3 UI.json
+examples/* - Sample.json

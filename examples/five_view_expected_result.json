@@ -1,0 +1,11 @@
+{
+  "width": 1824,
+  "height": 1072,
+  "format": "layout_json",
+  "negative_prompt": "",
+  "prompt_sha256": "d63a358330c925048c048ed059157db4da075217b590536dd7d8c1da5f7cba8c",
+  "prompt_utf8_bytes": 2958,
+  "token_count": null,
+  "token_status": "not_measured",
+  "image_generation": "not_run"
+}

@@ -1,0 +1,29 @@
+{
+  "kind": "moss_image_character_sheet",
+  "schema_version": 1,
+  "views": [
+    "body_front"
+  ],
+  "character": {
+    "identity": "An adult female explorer with short dark-blue hair, amber eyes, a medium build and a small silver ear cuff on her anatomical left ear.",
+    "outfit": "A muted green waist-length jacket, a cream shirt, charcoal trousers, fingerless brown gloves and brown ankle boots."
+  },
+  "part_prompts": {},
+  "appearance": {
+    "hand_state": "auto",
+    "clothing_mode": "worn",
+    "clothing_type": "auto",
+    "footwear_state": "auto"
+  },
+  "style": "anime",
+  "background": "white",
+  "prompt_format": "auto",
+  "negative_prompt": "",
+  "size": {
+    "mode": "auto",
+    "body_height": 1120,
+    "pixel_budget": 2000000,
+    "manual_width": 1536,
+    "manual_height": 1024
+  }
+}

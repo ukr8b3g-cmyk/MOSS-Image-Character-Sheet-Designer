@@ -1,0 +1,11 @@
+{
+  "width": 608,
+  "height": 1280,
+  "format": "caption",
+  "negative_prompt": "",
+  "prompt_sha256": "c6e54c282db29761d1dbeea767ac05c773adae36a84d359c89e29330e24d363b",
+  "prompt_utf8_bytes": 948,
+  "token_count": null,
+  "token_status": "not_measured",
+  "image_generation": "not_run"
+}

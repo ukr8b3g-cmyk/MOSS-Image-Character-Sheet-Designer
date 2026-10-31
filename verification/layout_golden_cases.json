@@ -1,0 +1,450 @@
+{
+  "single": {
+    "width": 608,
+    "height": 1280,
+    "actual_body_height": 1120.0,
+    "density_score": 1.75,
+    "rows": [
+      [
+        "body"
+      ]
+    ],
+    "boxes": {
+      "body_front": [
+        80,
+        80,
+        528,
+        1200
+      ]
+    },
+    "budget": 2000000,
+    "mode": "auto"
+  },
+  "three": {
+    "width": 1568,
+    "height": 1264,
+    "actual_body_height": 1102.0,
+    "density_score": 1.721875,
+    "rows": [
+      [
+        "body"
+      ]
+    ],
+    "boxes": {
+      "body_front": [
+        78,
+        81,
+        520,
+        1183
+      ],
+      "body_left": [
+        563,
+        81,
+        1005,
+        1183
+      ],
+      "body_back": [
+        1048,
+        81,
+        1490,
+        1183
+      ]
+    },
+    "budget": 2000000,
+    "mode": "auto"
+  },
+  "five": {
+    "width": 1824,
+    "height": 1072,
+    "actual_body_height": 938.0,
+    "density_score": 1.465625,
+    "rows": [
+      [
+        "portrait",
+        "body"
+      ]
+    ],
+    "boxes": {
+      "face_front": [
+        67,
+        67,
+        519,
+        518
+      ],
+      "face_left": [
+        67,
+        554,
+        519,
+        1005
+      ],
+      "body_front": [
+        555,
+        67,
+        931,
+        1005
+      ],
+      "body_left": [
+        968,
+        67,
+        1344,
+        1005
+      ],
+      "body_back": [
+        1381,
+        67,
+        1757,
+        1005
+      ]
+    },
+    "budget": 2000000,
+    "mode": "auto"
+  },
+  "seven": {
+    "width": 2160,
+    "height": 912,
+    "actual_body_height": 798.0,
+    "density_score": 1.246875,
+    "rows": [
+      [
+        "portrait",
+        "body",
+        "detail"
+      ]
+    ],
+    "boxes": {
+      "face_front": [
+        58,
+        57,
+        442,
+        441
+      ],
+      "face_left": [
+        58,
+        471,
+        442,
+        855
+      ],
+      "body_front": [
+        473,
+        57,
+        793,
+        855
+      ],
+      "body_left": [
+        824,
+        57,
+        1144,
+        855
+      ],
+      "body_back": [
+        1175,
+        57,
+        1495,
+        855
+      ],
+      "hands": [
+        1526,
+        57,
+        2102,
+        441
+      ],
+      "feet": [
+        1526,
+        471,
+        2102,
+        855
+      ]
+    },
+    "budget": 2000000,
+    "mode": "auto"
+  },
+  "head": {
+    "width": 1328,
+    "height": 1280,
+    "actual_body_height": 1120.0,
+    "density_score": 1.3416666666666666,
+    "rows": [
+      [
+        "portrait"
+      ]
+    ],
+    "boxes": {
+      "face_front": [
+        81,
+        80,
+        642,
+        424
+      ],
+      "face_left": [
+        686,
+        80,
+        1247,
+        424
+      ],
+      "face_right": [
+        81,
+        468,
+        642,
+        812
+      ],
+      "face_3q_left": [
+        686,
+        468,
+        1247,
+        812
+      ],
+      "face_3q_right": [
+        81,
+        856,
+        642,
+        1200
+      ],
+      "face_back": [
+        686,
+        856,
+        1247,
+        1200
+      ]
+    },
+    "budget": 2000000,
+    "mode": "auto"
+  },
+  "thirteen": {
+    "width": 2592,
+    "height": 768,
+    "actual_body_height": 660.0,
+    "density_score": 0.7810416666666666,
+    "rows": [
+      [
+        "portrait",
+        "body",
+        "clothing",
+        "detail"
+      ]
+    ],
+    "boxes": {
+      "face_front": [
+        48,
+        54,
+        379,
+        257
+      ],
+      "face_left": [
+        405,
+        54,
+        735,
+        257
+      ],
+      "face_right": [
+        48,
+        282,
+        379,
+        486
+      ],
+      "face_3q_left": [
+        405,
+        282,
+        735,
+        486
+      ],
+      "face_3q_right": [
+        48,
+        511,
+        379,
+        714
+      ],
+      "face_back": [
+        405,
+        511,
+        735,
+        714
+      ],
+      "body_front": [
+        761,
+        54,
+        1026,
+        714
+      ],
+      "body_left": [
+        1051,
+        54,
+        1316,
+        714
+      ],
+      "body_back": [
+        1342,
+        54,
+        1607,
+        714
+      ],
+      "clothing_front": [
+        1632,
+        54,
+        1897,
+        714
+      ],
+      "clothing_back": [
+        1923,
+        54,
+        2187,
+        714
+      ],
+      "hands": [
+        2213,
+        54,
+        2544,
+        371
+      ],
+      "feet": [
+        2213,
+        397,
+        2544,
+        714
+      ]
+    },
+    "budget": 2000000,
+    "mode": "auto"
+  },
+  "thirteen_4mp": {
+    "width": 3680,
+    "height": 1072,
+    "actual_body_height": 938.0,
+    "density_score": 1.1128645833333333,
+    "rows": [
+      [
+        "portrait",
+        "body",
+        "clothing",
+        "detail"
+      ]
+    ],
+    "boxes": {
+      "face_front": [
+        67,
+        67,
+        537,
+        355
+      ],
+      "face_left": [
+        573,
+        67,
+        1043,
+        355
+      ],
+      "face_right": [
+        67,
+        392,
+        537,
+        680
+      ],
+      "face_3q_left": [
+        573,
+        392,
+        1043,
+        680
+      ],
+      "face_3q_right": [
+        67,
+        717,
+        537,
+        1005
+      ],
+      "face_back": [
+        573,
+        717,
+        1043,
+        1005
+      ],
+      "body_front": [
+        1080,
+        67,
+        1456,
+        1005
+      ],
+      "body_left": [
+        1492,
+        67,
+        1869,
+        1005
+      ],
+      "body_back": [
+        1905,
+        67,
+        2281,
+        1005
+      ],
+      "clothing_front": [
+        2318,
+        67,
+        2694,
+        1005
+      ],
+      "clothing_back": [
+        2731,
+        67,
+        3107,
+        1005
+      ],
+      "hands": [
+        3143,
+        67,
+        3613,
+        518
+      ],
+      "feet": [
+        3143,
+        554,
+        3613,
+        1005
+      ]
+    },
+    "budget": 4000000,
+    "mode": "auto"
+  },
+  "five_manual_1536x1024": {
+    "width": 1536,
+    "height": 1024,
+    "actual_body_height": 790.5882352941177,
+    "density_score": 1.2352941176470589,
+    "rows": [
+      [
+        "portrait",
+        "body"
+      ]
+    ],
+    "boxes": {
+      "face_front": [
+        56,
+        116,
+        436,
+        497
+      ],
+      "face_left": [
+        56,
+        527,
+        436,
+        908
+      ],
+      "body_front": [
+        467,
+        116,
+        784,
+        908
+      ],
+      "body_left": [
+        815,
+        116,
+        1132,
+        908
+      ],
+      "body_back": [
+        1163,
+        116,
+        1480,
+        908
+      ]
+    },
+    "budget": null,
+    "mode": "manual"
+  }
+}

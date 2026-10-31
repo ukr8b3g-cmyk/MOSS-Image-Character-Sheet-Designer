@@ -33,7 +33,7 @@ Load CLIPのtypeは **`moss_image`**。確認済みTEの画像理解機能を共
 1. **テキストから:** サブグラフの`enable_prompt_enhancer`を **false** にし、**Character Profile**に人物・衣装の説明を入力します。画像の文章化は実行しません。
 2. **画像から:** **Load Image**で画像を選び、`enable_prompt_enhancer`を **true** にします。内部で最大辺1024pxに縮小してGenerate Textへ渡します。必要な変更指示はそのpromptへ入力できます。画像説明用system promptは接続済みです。
 3. Designerのカード／プリセットでビューを選び、必要に応じて部位の補足、スタイル、Clothing shapeを設定します。
-4. seedを設定して実行します。初期値は5ビュー、追加スタイルなし、**Euler / simple、8 steps、CFG 2、LoRA 0.7**です。
+4. seedを設定して実行します。初期値は5ビュー、追加スタイルなし、**Euler / simple、8 steps、CFG 2、LoRA 0.8**です。
 
 **Character Profileには被写体・衣装の特徴だけを入力し、背景・風景・無関係な物は入れないでください。** 背景削除や、入力中の背景指定を確実に無視する処理はありません。背景色の選択は生成指示であり、切り抜きマスクではありません。
 

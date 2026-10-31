@@ -37,7 +37,7 @@ The template groups model loading, image description and sampling in a subgraph.
 1. **Text:** set the subgraph's `enable_prompt_enhancer` switch to **false** and enter a description in **Character Profile**. Image captioning is bypassed.
 2. **Image:** select a file in **Load Image** and set `enable_prompt_enhancer` to **true**. Inside the subgraph, Generate Text describes the image after resizing its maximum dimension to 1024 pixels. Its prompt can contain a requested change; the connected system prompt provides description instructions.
 3. Choose illustrated views or a preset. Optionally set part prompts, global style and Clothing shape.
-4. Set the seed and run. Defaults: five views, no added global style, **Euler / simple, 8 steps, CFG 2, LoRA 0.7**.
+4. Set the seed and run. Defaults: five views, no added global style, **Euler / simple, 8 steps, CFG 2, LoRA 0.8**.
 
 **Describe the subject and outfit only. Leave backgrounds, scenery and unrelated objects out of Character Profile.** This node does not remove backgrounds or guarantee that background instructions are ignored. A selected background is a generation instruction, not a segmentation mask.
 

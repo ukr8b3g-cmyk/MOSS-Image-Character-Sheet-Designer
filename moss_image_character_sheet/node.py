@@ -28,7 +28,7 @@ class MOSSImageCharacterSheetDesigner:
     FUNCTION='compile'
     RETURN_TYPES=('STRING','INT','INT')
     RETURN_NAMES=('prompt','width','height')
-    DESCRIPTION='Choose illustrated views and describe the character. Connect prompt to positive CLIPTextEncode and width/height to EmptyFlux2LatentImage. Edit the negative prompt in a separate CLIPTextEncode.'
+    DESCRIPTION='v1.0. Choose illustrated views and describe the character. Connect prompt to positive CLIPTextEncode and width/height to EmptyFlux2LatentImage. Edit the negative prompt in a separate CLIPTextEncode.'
 
     @classmethod
     def INPUT_TYPES(cls):

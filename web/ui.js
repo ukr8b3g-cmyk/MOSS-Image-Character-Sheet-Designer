@@ -171,6 +171,7 @@ export function createDesignerUI({controller, locale = 'ja', compatibilityWarnin
   const partDrafts = new Map(); let selectedPart = PART_IDS[0], activeTab = 'layout';
   const drafts = new Map(); let customHeight = false; let localError = null, lastRaw = Symbol(), lastPreviewKey = null; let external = false, token = null, partComposing = false;
   const header = element('div', 'moss-intro'), intro = element('span'), count = element('span', 'moss-count'); header.append(intro, count);
+  const version = element('span', 'moss-node-version', 'v1.0'); header.prepend(version);
   const cards = element('div', 'moss-cards'), cardMap = new Map();
   const headRow = element('div', 'moss-card-row moss-head-row'), bodyRow = element('div', 'moss-card-row moss-body-row');
   if (multiReference) cards.append(headRow, bodyRow);

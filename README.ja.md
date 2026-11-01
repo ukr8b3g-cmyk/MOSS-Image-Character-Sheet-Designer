@@ -1,27 +1,27 @@
-# MOSS-Image Character Sheet Designer
+# MOSS-Image Character Sheet Designer v1.0
+
+[English](README.md) · [ワークフローをダウンロード](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases/download/v1.0/MOSS-Image%20Character%20Sheet%20Designer%20-%20Text%20or%20Image.json) · [リリース](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
+
+テキストの説明、またはMOSSのテキストエンコーダーで文章化した画像から、キャラクター設定シートを生成するComfyUIノードです。[H3版](https://github.com/ukr8b3g-cmyk/H3-Character-Sheet-Designer)と[Qwen-Image 2.1版](https://github.com/ukr8b3g-cmyk/Qwen-Image-2.1-Character-Sheet-Designer)を基に、図付きビュー選択、部位別プロンプト、スタイル、最大**13ビュー**のAuto／Manual配置に対応します。
+
+## 重要：画像は文章に変換してから生成します
+
+**このワークフローはテキストからの画像生成です。H3版・Qwen版と異なり、入力画像をMOSSの生成用リファレンス画像として直接渡しません。**
+
+- **テキスト入力：** Character Profileへ人物と衣装の説明を入力します。基本となる入力方法です。
+- **画像入力：** `enable_prompt_enhancer`を有効にします。既存のMOSSテキストエンコーダーで画像を解析し、その説明文から新しいシートを生成します。
+
+**入力画像 → エンコーダーで解析 → 説明文 → MOSSで新規T2I生成**
+
+元画像の画素やキャラクターの完全保持は保証しません。顔、衣装、色、装飾、文字、見えていない背面などは変わる場合があります。直接の画像編集や、生成時に元画像を直接参照する方式ではありません。上記の**1つのワークフロー**でテキスト／画像を切り替えられます。複数のテンプレートから選ぶ必要はありません。
+
+Character Profileには**1人のキャラクターの外見だけ**を入力してください。顔・髪・体格・衣装・装飾を中心とし、背景・風景・無関係な物・別人物は入れないでください。
+
 <img width="1774" height="818" alt="Clip_42" src="https://github.com/user-attachments/assets/c9b643e0-683f-41f2-ac2e-fa6455191dc2" />
 
+## バージョン1.0
 
-[English](README.md) · [テンプレート](examples/MOSS-Image%20Character%20Sheet%20Designer%20-%20Text%20or%20Image.json) · [リリース](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
-
-H3 Reference13を基準にしたカード式UIで、MOSS-Imageのキャラクターシートを組み立てるComfyUIノードです。テキストまたは画像から生成できます。
-
-**画像入力は「画像 → TEによる説明文 → 新しい画像の生成」です。** 元画像を直接編集したり、画素を保持する参照方式ではありません。文章化によって情報が失われるため、同一性、衣服の細部、色、文字、見えていない背面などは変わる場合があります。忠実に保持して編集する用途には、画像編集対応モデルを使用してください。
-
-## v0.2.1の修正内容と残る制約
-
-製品版 **v0.2.1**、内部プロンプト契約 **moss-sheet-1.4.1**です。
-
-- 抽出した衣装情報が空でも、利用者の部位指定・衣装型を保持します。指定のない衣装面は白紙にでき、衣装の自動創作やTEの再試行は追加していません。
-- 全13面の説明を実際のAuto／Manual配置から生成し、特徴整理後のCaptionにも各パネルの位置文を保持します。最終出力処理を共通化しました。
-- 外部promptのUnicodeと2,000 UTF-16単位上限を内部解析前に検査し、エラーは`prompt`を示します。
-- 「靴なし」は指定した靴下・タイツを保持する指示へ統一。Settingsの説明を、最終プロンプト表示ではなく保存JSONの復旧へ訂正しました。
-
-**Python21件・DOM8件成功**。既存5プリセット×2入力の10条件は修正前とコンパイル結果が一致しました。GPUの対象2ケースで画像保存まで成功し、衣装の明示指定、Manualの4行説明、Captionの13パネル位置文を確認しています。空の衣装文字列はCPUで制御入力により検証しました。実GPUの抽出は文字列`None`だったため、空文字が実際に出る頻度を測定したものではありません。
-
-**画質上の制約は残ります。** 衣装テスト画像には頭部・身体の断片が残り、縦長Manual／全13面Captionでは頭数増加・方向重複がありました。正確な枚数・衣装の分離・向きは保証できません。今回の2件は複数seedでの画質評価ではありません。DesignerのUI・入出力・配布テンプレート内のノード名は変更していません。
-
-更新後はComfyUIを通常の方法で再起動してから、ブラウザーを再読み込みしてください。必要モデルのURLと、画像を説明文へ変換して再生成する仕組みは下記のとおりです。
+ノードと製品版は**v1.0**です。内部プロンプト契約の**moss-sheet-1.4.1**は別の実装番号です。今回は配布ファイルと説明を整理し、ノードの版表示を揃えました。生成処理と配布ワークフローの設定は変更していません。従来の指示保持修正も引き継いでいます。修正履歴と制約は[CHANGELOG](CHANGELOG.md)を参照してください。
 
 ## 導入と必要モデル
 
@@ -41,7 +41,7 @@ H3 Reference13を基準にしたカード式UIで、MOSS-Imageのキャラクタ
 
 Load CLIPのtypeは **`moss_image`**。確認済みTEの画像理解機能を共有するため、別のCLIP Visionは不要です。LoRA強度 **0.7** は[作者の案内](https://huggingface.co/lodestones/MOSS-Image-SFT-8-steps-dmd)に基づきます。[OpenMOSS公式](https://github.com/OpenMOSS/MOSS-Image)も参照してください。
 
-ノードは`MOSS-Image/Character Sheet`の **MOSS-Image Character Sheet Designer**です。Generate Text、Switch、Seedなど、他のテンプレート内ノードはComfyUI標準です。不足する場合はComfyUIを更新してください。
+ノードは`MOSS-Image/Character Sheet`の **MOSS-Image Character Sheet Designer v1.0**です。Generate Text、Switch、Seedなど、他のテンプレート内ノードはComfyUI標準です。不足する場合はComfyUIを更新してください。
 
 ## テキスト／画像の使い方
 

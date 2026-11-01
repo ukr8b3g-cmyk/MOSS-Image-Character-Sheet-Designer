@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0
+
+- Keep one user-facing Text or Image workflow in examples and attach it to this Release.
+- Keep runtime defaults in contracts/default_state.json and move the five required regression fixtures into tests/fixtures; remove unused example data and obsolete local templates.
+- Explain text input and image-to-description-to-T2I generation prominently in both READMEs, with current model filenames and download URLs. Preserve the user-added README images.
+- Align package, node display and UI version labels to 1.0. Node identifiers, sockets, generation logic and workflow settings remain unchanged.
+- Retain the v0.2.1 fixes and visual limitations below. Internal prompt compiler remains moss-sheet-1.4.1.
+
 ## v0.2.1
 
 - Preserve explicit garment part prompts and clothing shape when extracted outfit facts are empty, including clothing-only sheets.

@@ -64,3 +64,6 @@
 .moss-settings-panel .moss-json-editor textarea { min-height: 140px; margin-top: 6px; font-size: 12px; }
 .moss-settings-panel .moss-json-editor p { margin: 5px 0; font-size: 12px; }
 .moss-settings-panel .moss-apply { min-height: 30px; padding: 4px 8px; font-size: 13px; }
+
+.moss-sheet-designer .moss-node-version { flex: none; color: #83d7c6; font-size: 12px; white-space: nowrap; }
+.moss-sheet-designer .moss-intro > span:nth-child(2) { margin-right: auto; }

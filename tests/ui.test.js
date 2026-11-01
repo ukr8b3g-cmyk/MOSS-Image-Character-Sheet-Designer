@@ -13,7 +13,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
 function setup(){const dom=new JSDOM('<body></body>',{url:'http://localhost/'});for(const key of ['window','document','AbortController','Event','CompositionEvent'])globalThis[key]=dom.window[key];return dom;}
 test('browser contract and compiler preview agree',()=>{
   const contract=JSON.parse(readFileSync(new URL('../contracts/prompt_contract.v1.json',import.meta.url),'utf8'));
-  const preview=JSON.parse(readFileSync(new URL('../examples/sample_preview.json',import.meta.url),'utf8'));
+  const preview=JSON.parse(readFileSync(new URL('./fixtures/sample_preview.json',import.meta.url),'utf8'));
   assert.deepEqual(CONTRACT,contract);
   assert.equal(validatePreview(preview,preview.canonical_state),preview);
 });
@@ -90,7 +90,7 @@ test('integration retains widget, flushes serialize, restores hooks and readds',
 });
 
 test('late preview responses never replace the current saved input',async()=>{
-  const fixture=JSON.parse(readFileSync(new URL('../examples/sample_preview.json',import.meta.url),'utf8'));
+  const fixture=JSON.parse(readFileSync(new URL('./fixtures/sample_preview.json',import.meta.url),'utf8'));
   const requests=[];
   const c=new DesignerController({raw:JSON.stringify(fixture.canonical_state),requestPreview:raw=>new Promise(resolve=>requests.push({raw,resolve}))});
   await pause(290);
@@ -107,7 +107,7 @@ test('late preview responses never replace the current saved input',async()=>{
 
 test('clothing cards and layout use garment symbols without a wearer',()=>{
   const dom=setup();let ui;
-  const fixture=JSON.parse(readFileSync(new URL('../examples/sample_preview.json',import.meta.url),'utf8'));
+  const fixture=JSON.parse(readFileSync(new URL('./fixtures/sample_preview.json',import.meta.url),'utf8'));
   const c=new DesignerController({raw:JSON.stringify(fixture.canonical_state),requestPreview:()=>new Promise(()=>{}),onChange:()=>ui?.render()});
   ui=createDesignerUI({controller:c});
   c.preset('clothing');

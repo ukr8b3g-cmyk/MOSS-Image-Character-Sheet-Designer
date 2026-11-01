@@ -208,8 +208,8 @@ class CompilerTests(unittest.TestCase):
     def test_prompt_fixtures(self):
         for name in ('five_view','single_view'):
             with self.subTest(name=name):
-                result=preview((ROOT/f'examples/{name}_state.json').read_text(encoding='utf-8'))
-                expected=json.loads((ROOT/f'examples/{name}_expected_result.json').read_text(encoding='utf-8'))
+                result=preview((ROOT/f'tests/fixtures/{name}_state.json').read_text(encoding='utf-8'))
+                expected=json.loads((ROOT/f'tests/fixtures/{name}_expected_result.json').read_text(encoding='utf-8'))
                 self.assertEqual((result['width'],result['height']),(expected['width'],expected['height']))
                 self.assertEqual(hashlib.sha256(result['prompt'].encode()).hexdigest(),expected['prompt_sha256'])
 

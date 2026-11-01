@@ -23,4 +23,4 @@ For DOM tests, supply an existing jsdom module directory through MOSS_TEST_JSDOM
 node --test tests/ui.test.js
 ```
 
-Test-only packages are not required for normal ComfyUI use. Fixtures in examples/ and verification/layout_golden_cases.json support the suites. The recommended user workflow is the Text or Image template.
+Test-only packages are not required for normal ComfyUI use. Fixtures in tests/fixtures/ and verification/layout_golden_cases.json support the suites. The recommended user workflow is the Text or Image template.

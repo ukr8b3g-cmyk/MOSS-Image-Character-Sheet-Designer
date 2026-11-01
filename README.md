@@ -1,27 +1,27 @@
-# MOSS-Image Character Sheet Designer
+# MOSS-Image Character Sheet Designer v1.0
+
+[日本語](README.ja.md) · [Download the workflow](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases/download/v1.0/MOSS-Image%20Character%20Sheet%20Designer%20-%20Text%20or%20Image.json) · [Releases](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
+
+Create character reference sheets from a text description or an image described by the MOSS text encoder. Based on the [H3 Character Sheet Designer](https://github.com/ukr8b3g-cmyk/H3-Character-Sheet-Designer) and [Qwen-Image 2.1 Character Sheet Designer](https://github.com/ukr8b3g-cmyk/Qwen-Image-2.1-Character-Sheet-Designer), with illustrated view selection, part prompts, styles and Auto/Manual layouts for up to **13 views**.
+
+## Important: image input is converted to text before generation
+
+**This is a text-to-image workflow. Unlike the H3 and Qwen versions, an input image is not passed directly to MOSS as a visual reference for image generation.**
+
+- **Text input:** enter a character and outfit description in Character Profile. This is the main input method.
+- **Image input:** enable `enable_prompt_enhancer`. The existing MOSS text encoder analyzes the image, and the resulting description becomes the input for a new generated sheet.
+
+**Input image → encoder analysis → text description → new MOSS text-to-image generation**
+
+Image input therefore does not preserve the original pixels or guarantee the same character. Facial features, garments, colors, accessories, lettering and unseen sides may change. It is not direct image editing or reference-image conditioning. Both input methods are included in the **single workflow** linked above; you do not need to choose between several templates.
+
+Describe **one character and their appearance only**. Include face, hair, proportions, clothing and accessories; leave backgrounds, scenery, unrelated objects and additional people out of Character Profile.
+
 <img width="1774" height="818" alt="Clip_42" src="https://github.com/user-attachments/assets/d99a725b-136a-43ff-b7ae-acaa532cc127" />
 
+## Version 1.0
 
-[日本語](README.ja.md) · [Workflow](examples/MOSS-Image%20Character%20Sheet%20Designer%20-%20Text%20or%20Image.json) · [Releases](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
-
-A visual character-sheet layout node for ComfyUI and MOSS-Image. Select illustrated views and generate from text or an image described by the existing MOSS text encoder. The compact interface follows the H3 Reference13 designer, with MOSS-specific prompt compilation.
-
-**Image input is image → text description → new image generation.** It is not direct image editing or pixel-based reference conditioning. The encoder describes the input, then MOSS generates a new sheet. Identity, clothing details, colors, lettering and unseen views can differ. Use an image-editing model when exact preservation matters.
-
-## v0.2.1 fixes and remaining limits
-
-Package **v0.2.1** uses internal prompt compiler **moss-sheet-1.4.1**.
-
-- Explicit garment part details and clothing shape survive an empty extracted outfit. Unspecified garment panels may remain blank; the node does not invent an outfit or retry the encoder.
-- All-13 summaries follow the computed Auto/Manual layout. Caption output retains each panel's position after feature analysis through a shared output serializer.
-- External prompts are checked for valid Unicode and the 2,000 UTF-16-unit limit before internal analysis; errors identify `prompt`.
-- Footwear off preserves described socks/tights. Settings documentation now correctly describes saved JSON recovery instead of a final-prompt display.
-
-Validation: **21 Python tests and 8 DOM tests passed**; 10 existing preset/input combinations kept identical compiled results. Two targeted GPU runs saved images and confirmed retained garment instructions, the four-row Manual layout description and all 13 Caption position statements. Empty outfit strings were tested with controlled CPU inputs; the real GPU extractor returned the literal text `None`, so those runs do not measure how often empty strings occur.
-
-**Visual limitations remain:** the garment smoke image still included a head/body fragment, and the vertical all-13 Caption image produced extra heads and repeated directions. Exact panel counts, garment isolation and viewpoint accuracy are not guaranteed. These two smoke runs are not a new multi-seed quality benchmark. The Designer UI, sockets and supplied workflow/node names are unchanged.
-
-After updating, restart ComfyUI and then reload the browser. Model download links and the image-to-description generation explanation below still apply.
+The node and package are **v1.0**. The internal prompt compiler remains **moss-sheet-1.4.1**, a separate implementation identifier. This release simplifies downloads and documentation and labels the node version; generation logic and the supplied workflow settings are unchanged. Earlier prompt-preservation fixes are retained; see [CHANGELOG](CHANGELOG.md) for details and known limitations.
 
 ## Installation
 
@@ -31,7 +31,7 @@ After updating, restart ComfyUI and then reload the browser. Model download link
 4. Restart ComfyUI normally and reload the browser.
 5. Open [MOSS-Image Character Sheet Designer - Text or Image.json](examples/MOSS-Image%20Character%20Sheet%20Designer%20-%20Text%20or%20Image.json).
 
-Find **MOSS-Image Character Sheet Designer** under `MOSS-Image/Character Sheet`. Other template nodes, including Generate Text, Switch and Seed, are ComfyUI core nodes. Update ComfyUI if they are missing.
+Find **MOSS-Image Character Sheet Designer v1.0** under `MOSS-Image/Character Sheet`. Other template nodes, including Generate Text, Switch and Seed, are ComfyUI core nodes. Update ComfyUI if they are missing.
 
 ## Required models
 

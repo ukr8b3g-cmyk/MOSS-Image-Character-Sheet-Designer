@@ -1,4 +1,6 @@
 # MOSS-Image Character Sheet Designer
+<img width="1774" height="818" alt="Clip_42" src="https://github.com/user-attachments/assets/d99a725b-136a-43ff-b7ae-acaa532cc127" />
+
 
 [日本語](README.ja.md) · [Workflow](examples/MOSS-Image%20Character%20Sheet%20Designer%20-%20Text%20or%20Image.json) · [Releases](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
 

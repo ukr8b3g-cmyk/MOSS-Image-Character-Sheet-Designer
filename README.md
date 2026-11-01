@@ -1,6 +1,6 @@
 # MOSS-Image Character Sheet Designer v1.0
 
-[日本語](README.ja.md) · [Download the workflow](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases/download/v1.0/MOSS-Image%20Character%20Sheet%20Designer%20-%20Text%20or%20Image.json) · [Releases](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
+[日本語](README.ja.md) · [Download the workflow](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases/download/v1.0/MOSS-Image-Character-Sheet-Designer-v1.0.json) · [Releases](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
 
 Create character reference sheets from a text description or an image described by the MOSS text encoder. Based on the [H3 Character Sheet Designer](https://github.com/ukr8b3g-cmyk/H3-Character-Sheet-Designer) and [Qwen-Image 2.1 Character Sheet Designer](https://github.com/ukr8b3g-cmyk/Qwen-Image-2.1-Character-Sheet-Designer), with illustrated view selection, part prompts, styles and Auto/Manual layouts for up to **13 views**.
 

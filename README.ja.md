@@ -1,6 +1,6 @@
 # MOSS-Image Character Sheet Designer v1.0
 
-[English](README.md) · [ワークフローをダウンロード](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases/download/v1.0/MOSS-Image%20Character%20Sheet%20Designer%20-%20Text%20or%20Image.json) · [リリース](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
+[English](README.md) · [ワークフローをダウンロード](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases/download/v1.0/MOSS-Image-Character-Sheet-Designer-v1.0.json) · [リリース](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
 
 テキストの説明、またはMOSSのテキストエンコーダーで文章化した画像から、キャラクター設定シートを生成するComfyUIノードです。[H3版](https://github.com/ukr8b3g-cmyk/H3-Character-Sheet-Designer)と[Qwen-Image 2.1版](https://github.com/ukr8b3g-cmyk/Qwen-Image-2.1-Character-Sheet-Designer)を基に、図付きビュー選択、部位別プロンプト、スタイル、最大**13ビュー**のAuto／Manual配置に対応します。
 

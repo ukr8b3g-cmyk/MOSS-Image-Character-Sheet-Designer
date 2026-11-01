@@ -1,5 +1,5 @@
 {
-  "contract_version": "moss-sheet-1.4.0",
+  "contract_version": "moss-sheet-1.4.1",
   "view_order": [
     "face_front",
     "face_left",
@@ -278,7 +278,7 @@
     },
     "footwear_state": {
       "shod": "Visible feet wear footwear rather than being bare.",
-      "unshod": "Visible feet are bare rather than wearing shoes or boots."
+      "unshod": "Visible feet have no shoes or boots; retain described socks or tights."
     },
     "clothing_type": {
       "pants": "The lower garment is trousers rather than a skirt or robe.",

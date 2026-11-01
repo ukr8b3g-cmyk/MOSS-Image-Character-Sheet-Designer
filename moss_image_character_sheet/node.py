@@ -1,7 +1,7 @@
 from nodes import MAX_RESOLUTION
 from .catalog import DEFAULT, REVISION
 from .compiler import preview
-from .state import compact, StateError, fail, parse_state, nonblank
+from .state import compact, StateError, fail, parse_state, validate_prompt
 from .features import INSTRUCTION, needs_analysis, parse_features, apply_features
 
 def encoder_link(execution_graph, node_id):
@@ -44,15 +44,14 @@ class MOSSImageCharacterSheetDesigner:
     def VALIDATE_INPUTS(cls,state_json,prompt=None):
         try:
             parse_state(state_json,MAX_RESOLUTION)
-            if prompt is not None and (not isinstance(prompt,str) or not nonblank(prompt)):
-                return 'E_PROMPT_EMPTY: prompt入力に人物・衣装の説明を接続してください。 / Connect a nonempty prompt.'
+            if prompt is not None:
+                validate_prompt(prompt)
             return True
         except StateError as error:
             return str(error)
 
     def compile(self,state_json,prompt,execution_graph=None,node_id=None):
-        if not isinstance(prompt,str) or not nonblank(prompt):
-            fail('E_PROMPT_EMPTY','prompt','prompt入力に人物・衣装の説明を接続してください。 / Connect a nonempty prompt.')
+        validate_prompt(prompt)
         state=parse_state(state_json,MAX_RESOLUTION)
         state['character']={'identity':prompt,'outfit':''}
         if needs_analysis(state):

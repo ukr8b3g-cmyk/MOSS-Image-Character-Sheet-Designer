@@ -3,6 +3,7 @@ import json
 from .catalog import CONTRACT, DEFAULT, VIEWS, PARTS
 
 WHITESPACE = '\u0009\u000a\u000b\u000c\u000d\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000\ufeff'
+PROMPT_MAX_UTF16_UNITS = 2000
 
 class StateError(ValueError):
     def __init__(self, code, path='state_json', details=''):
@@ -53,6 +54,11 @@ def enum(value, values, path):
     if type(value) is not str or value not in values:
         fail('E_ENUM', path)
     return value
+
+def validate_prompt(value):
+    if not isinstance(value,str) or not nonblank(value):
+        fail('E_PROMPT_EMPTY','prompt','prompt入力に人物・衣装の説明を接続してください。 / Connect a nonempty prompt.')
+    return text(value,PROMPT_MAX_UTF16_UNITS,'prompt')
 
 def parse_state(raw, runtime_max_resolution=16384):
     if type(raw) is not str:

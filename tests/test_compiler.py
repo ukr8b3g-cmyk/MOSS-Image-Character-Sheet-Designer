@@ -4,6 +4,7 @@ import json
 import unittest
 import sys
 import types
+import re
 from unittest.mock import patch
 from pathlib import Path
 from moss_image_character_sheet.catalog import DEFAULT, CONTRACT, ROOT, VIEWS
@@ -13,6 +14,92 @@ from moss_image_character_sheet.layout import compute_layout
 from moss_image_character_sheet.features import needs_analysis, parse_features, apply_features
 
 class CompilerTests(unittest.TestCase):
+    def test_empty_outfit_preserves_explicit_garment_details_and_shape(self):
+        features=dict(subject='robot',head='metal head',outfit='',hands='',feet='',shared='')
+        for views in (['body_front','clothing_front','clothing_back'],['clothing_front','clothing_back']):
+            for shape in ('auto','pants','skirt_robe'):
+                with self.subTest(views=views,shape=shape):
+                    s=copy.deepcopy(DEFAULT);s['views']=views;s['character']['identity']='A robot.'
+                    s['part_prompts']={'upper_clothing':'PURPLE_COAT','back_clothing':'GOLD_BACK','lower_body':'GREEN_PANTS'}
+                    s['appearance']['clothing_type']=shape
+                    before=preview(compact(s));after=apply_features(before,s,features)
+                    by_id=dict(zip(views,after['layout_draft']['items']))
+                    for view in ('clothing_front','clothing_back'):
+                        self.assertEqual(by_id[view]['caption'],dict(zip(views,before['layout_draft']['items']))[view]['caption'])
+                        self.assertIn('PURPLE_COAT',by_id[view]['caption'])
+                        self.assertIn('GREEN_PANTS',by_id[view]['caption'])
+                    self.assertNotIn('GOLD_BACK',by_id['clothing_front']['caption'])
+                    self.assertIn('GOLD_BACK',by_id['clothing_back']['caption'])
+                    self.assertNotIn('blank',after['layout_draft']['summary']['caption'].lower())
+
+    def test_empty_outfit_blanks_only_unspecified_garment_views(self):
+        features=dict(subject='robot',head='',outfit='',hands='',feet='',shared='')
+        for views in (['body_front','clothing_front','clothing_back'],['clothing_front','clothing_back']):
+            for parts,shape in (({},'auto'),({'back_clothing':'GOLD_BACK'},'auto'),({},'pants'),({},'skirt_robe')):
+                with self.subTest(views=views,parts=parts,shape=shape):
+                    s=copy.deepcopy(DEFAULT);s['views']=views;s['character']['identity']='A robot.'
+                    s['part_prompts']=parts;s['appearance']['clothing_type']=shape
+                    after=apply_features(preview(compact(s)),s,features)
+                    by_id=dict(zip(views,after['layout_draft']['items']))
+                    for view in ('clothing_front','clothing_back'):
+                        specified=shape!='auto' or view=='clothing_back' and bool(parts)
+                        self.assertEqual(by_id[view]['caption']=='Blank white space.',not specified)
+                    if len(views)==2:
+                        self.assertEqual('blank' in after['layout_draft']['summary']['caption'].lower(),not parts and shape=='auto')
+
+    def test_scoped_all13_summary_follows_actual_rows(self):
+        features=dict(subject='robot',head='metal head',outfit='purple coat',hands='',feet='',shared='')
+        for size in (dict(mode='auto'),dict(mode='manual',manual_width=512,manual_height=2048),dict(mode='manual',manual_width=4096,manual_height=512),dict(mode='manual',manual_width=1024,manual_height=1024)):
+            with self.subTest(size=size):
+                s=copy.deepcopy(DEFAULT);s['views']=VIEWS[:];s['character']['identity']='A robot.';s['size'].update(size)
+                before=preview(compact(s));after=apply_features(before,s,features)
+                summary=after['layout_draft']['summary']['caption']
+                self.assertNotIn('at left',summary);self.assertNotIn('at right',summary)
+                self.assertIn('6 close-up headshots',summary)
+                rows=before['layout_plan']['rows']
+                if len(rows)>1:
+                    for i in range(len(rows)):self.assertIn(f'Sheet row {i+1}, from left to right:',summary)
+                else:self.assertIn('From left to right:',summary)
+                if size.get('manual_width')==512:
+                    self.assertEqual(rows,[['portrait'],['body'],['clothing'],['detail']])
+                self.assertEqual([i['bbox'] for i in before['layout_draft']['items']],[i['bbox'] for i in after['layout_draft']['items']])
+
+    def test_caption_keeps_each_panel_position_after_feature_analysis(self):
+        features=dict(subject='robot',head='silver head',outfit='purple coat',hands='',feet='red boots',shared='')
+        for views in (['face_front','face_left','face_right'],['face_front','face_left','face_right','feet'],VIEWS[:]):
+            s=copy.deepcopy(DEFAULT);s['views']=views;s['character']['identity']='A robot.';s['prompt_format']='caption'
+            s['size'].update(mode='manual',manual_width=512,manual_height=2048)
+            before=preview(compact(s));after=apply_features(before,s,features)
+            locations=lambda prompt:re.findall(r'The [^.]+ is in the [^.]+ region\.',prompt)
+            self.assertEqual(len(locations(after['prompt'])),len(views))
+            self.assertEqual(locations(after['prompt']),locations(before['prompt']))
+            self.assertNotIn(' is in the ',after['layout_draft']['items'][0]['caption'])
+
+    def test_external_prompt_limit_is_checked_before_analysis(self):
+        with patch.dict(sys.modules,{'nodes':types.SimpleNamespace(MAX_RESOLUTION=16384)}):
+            from moss_image_character_sheet.node import MOSSImageCharacterSheetDesigner as Node
+        raw=compact(DEFAULT)
+        for value in ('A'*2000,'😀'*1000):
+            self.assertIs(Node.VALIDATE_INPUTS(raw,value),True)
+            self.assertIn(value,Node().compile(raw,value)['result'][0])
+        for value,code in (('A'*2001,'E_TEXT_LIMIT'),('😀'*1001,'E_TEXT_LIMIT'),('\ud800','E_UNICODE')):
+            for views in (DEFAULT['views'],CONTRACT['presets']['clothing']):
+                s=copy.deepcopy(DEFAULT);s['views']=views;raw=compact(s)
+                self.assertTrue(Node.VALIDATE_INPUTS(raw,value).startswith(code+': prompt'))
+                with patch('moss_image_character_sheet.node.encoder_link') as encoder:
+                    with self.assertRaises(StateError) as raised:Node().compile(raw,value)
+                    self.assertEqual((raised.exception.code,raised.exception.path),(code,'prompt'))
+                    encoder.assert_not_called()
+
+    def test_footwear_off_retains_described_socks_without_requesting_bare_feet(self):
+        s=copy.deepcopy(DEFAULT);s['views']=['body_front','feet'];s['character']['identity']='A robot.'
+        s['part_prompts']={'footwear':'RED_SOCKS'};s['appearance']['footwear_state']='unshod'
+        for item in preview(compact(s))['layout_draft']['items']:
+            self.assertIn('RED_SOCKS',item['caption'])
+            self.assertIn('no shoes or boots',item['caption'])
+            self.assertIn('retain described socks or tights',item['caption'])
+            self.assertNotIn('feet are bare',item['caption'])
+
     def test_analysis_only_targets_troublesome_views(self):
         for preset in ('single','turnaround','five','basic','seven','head','clothing','detail'):
             s=copy.deepcopy(DEFAULT);s['views']=CONTRACT['presets'][preset]

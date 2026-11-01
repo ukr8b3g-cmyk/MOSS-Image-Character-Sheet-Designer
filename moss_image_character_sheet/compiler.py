@@ -36,6 +36,22 @@ def composition_caption(layout, concise=False):
         rows.append(prefix + '; '.join(groups) + '.')
     return ' '.join(rows)
 
+def render_prompt(draft, layout, form):
+    """Serialize the same panel descriptions for native JSON and caption output."""
+    w,h = draft['width'],draft['height']
+    if form == 'layout_json':
+        return compact(dict(summary=draft['summary'],items=[dict(label=i['label'],caption=i['caption'],bbox=[i['bbox'][1]-h//2,i['bbox'][0]-w//2,i['bbox'][3]-h//2,i['bbox'][2]-w//2]) for i in draft['items']],bbox_coord_space='abs_centralized',bbox_format='yxyx'))
+    captions = []
+    for panel, item in zip(layout['panels'], draft['items']):
+        caption = item['caption']
+        if len(draft['items']) > 1:
+            x0,y0,x1,y1 = item['bbox']
+            horizontal = 'left' if 3*(x0+x1)<2*w else 'right' if 3*(x0+x1)>=4*w else 'center'
+            vertical = 'upper' if 3*(y0+y1)<2*h else 'lower' if 3*(y0+y1)>=4*h else 'middle'
+            caption = f"The {C['views'][panel['id']]['name']} is in the {vertical} {horizontal} region. {caption}"
+        captions.append(caption)
+    return '\n\n'.join([draft['summary']['caption']]+captions)
+
 def compile_state(state, layout):
     views, parts, appearance = state['views'], state['part_prompts'], state['appearance']
     summary = C['summary']
@@ -65,7 +81,7 @@ def compile_state(state, layout):
         sentences.extend([summary['appearance_scope'],summary['blank_sheet']])
     shared = ' '.join(sentences)
     w,h = layout['canvas']
-    items, captions = [], []
+    items = []
     for panel in layout['panels']:
         v = panel['id']
         definition = C['views'][v]
@@ -85,17 +101,11 @@ def compile_state(state, layout):
         caption = ' '.join(sections)
         x0,y0,x1,y1 = panel['bbox_px']
         items.append(dict(label=label,caption=caption,bbox=[x0,y0,x1,y1]))
-        if len(views)>1:
-            horizontal = 'left' if 3*(x0+x1)<2*w else 'right' if 3*(x0+x1)>=4*w else 'center'
-            vertical = 'upper' if 3*(y0+y1)<2*h else 'lower' if 3*(y0+y1)>=4*h else 'middle'
-            caption = f"The {definition['name']} is in the {vertical} {horizontal} region. {caption}"
-        captions.append(caption)
     form = state['prompt_format']
     if form=='auto':
         form='caption' if len(views)==1 else 'layout_json'
-    model = dict(summary=dict(canvas='multi_panel' if len(views)>1 else 'single',caption=shared),items=[dict(label=item['label'],caption=item['caption'],bbox=[item['bbox'][1]-h//2,item['bbox'][0]-w//2,item['bbox'][3]-h//2,item['bbox'][2]-w//2]) for item in items],bbox_coord_space='abs_centralized',bbox_format='yxyx')
-    prompt = compact(model) if form=='layout_json' else '\n\n'.join([shared]+captions)
-    draft=dict(width=w,height=h,bbox_coord_space='abs',bbox_format='xyxy',summary=model['summary'],items=items)
+    draft=dict(width=w,height=h,bbox_coord_space='abs',bbox_format='xyxy',summary=dict(canvas='multi_panel' if len(views)>1 else 'single',caption=shared),items=items)
+    prompt = render_prompt(draft,layout,form)
     return dict(prompt=prompt,negative_prompt=state['negative_prompt'],resolved_format=form,layout_draft=draft)
 
 def preview(raw, runtime_max_resolution=16384):

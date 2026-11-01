@@ -6,6 +6,21 @@ A visual character-sheet layout node for ComfyUI and MOSS-Image. Select illustra
 
 **Image input is image → text description → new image generation.** It is not direct image editing or pixel-based reference conditioning. The encoder describes the input, then MOSS generates a new sheet. Identity, clothing details, colors, lettering and unseen views can differ. Use an image-editing model when exact preservation matters.
 
+## v0.2.1 fixes and remaining limits
+
+Package **v0.2.1** uses internal prompt compiler **moss-sheet-1.4.1**.
+
+- Explicit garment part details and clothing shape survive an empty extracted outfit. Unspecified garment panels may remain blank; the node does not invent an outfit or retry the encoder.
+- All-13 summaries follow the computed Auto/Manual layout. Caption output retains each panel's position after feature analysis through a shared output serializer.
+- External prompts are checked for valid Unicode and the 2,000 UTF-16-unit limit before internal analysis; errors identify `prompt`.
+- Footwear off preserves described socks/tights. Settings documentation now correctly describes saved JSON recovery instead of a final-prompt display.
+
+Validation: **21 Python tests and 8 DOM tests passed**; 10 existing preset/input combinations kept identical compiled results. Two targeted GPU runs saved images and confirmed retained garment instructions, the four-row Manual layout description and all 13 Caption position statements. Empty outfit strings were tested with controlled CPU inputs; the real GPU extractor returned the literal text `None`, so those runs do not measure how often empty strings occur.
+
+**Visual limitations remain:** the garment smoke image still included a head/body fragment, and the vertical all-13 Caption image produced extra heads and repeated directions. Exact panel counts, garment isolation and viewpoint accuracy are not guaranteed. These two smoke runs are not a new multi-seed quality benchmark. The Designer UI, sockets and supplied workflow/node names are unchanged.
+
+After updating, restart ComfyUI and then reload the browser. Model download links and the image-to-description generation explanation below still apply.
+
 ## Installation
 
 1. Use a recent [ComfyUI](https://github.com/Comfy-Org/ComfyUI) with MOSS-Image and native subgraph support. Tested: ComfyUI 0.43.0 / frontend 1.57.4.
@@ -53,7 +68,7 @@ Try another seed when results vary; optionally compare CFG 3. It improved some t
 | Clothing shape | Auto, pants, or skirt/robe; clothing panels always request garments alone, laid flat |
 | Layout | Guide illustrations and panel positions; these are not generated images |
 | Part prompts / Style | Details for selected parts and a global rendering style |
-| Settings | Advanced options, generated prompt inspection and saved JSON recovery |
+| Settings | Advanced options, warnings and saved JSON recovery |
 
 UI language follows ComfyUI. State is saved per node and restored with the workflow. Invalid saved JSON is reported instead of silently replaced.
 
@@ -65,6 +80,10 @@ UI language follows ComfyUI. State is saved per node and restored with the workf
 | `state_json` | Saved widget | View/layout/style settings managed by the UI |
 | `prompt` output | STRING | Single-view caption or MOSS Layout JSON |
 | `width`, `height` outputs | INT | Dimensions for EmptyFlux2LatentImage |
+
+The external `prompt` accepts up to **2,000 UTF-16 code units** (an emoji typically counts as two). This is this extension's character limit, not a MOSS token limit. Overlong or invalid Unicode input is rejected before internal analysis and is never silently truncated.
+
+Settings exposes saved JSON for recovery, not the final runtime prompt. The layout preview does not include the connected external prompt or encoder analysis.
 
 Connect `prompt` **directly to positive CLIPTextEncode**, and dimensions to EmptyFlux2LatentImage. Keep negatives in a separate CLIPTextEncode. The Designer has no negative output or visible CLIP input.
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.2.1
+
+- Preserve explicit garment part prompts and clothing shape when extracted outfit facts are empty, including clothing-only sheets.
+- Use actual computed layouts for all-13 summaries and retain per-panel positions in Caption output through shared serialization.
+- Reject invalid Unicode and external prompts over 2,000 UTF-16 units before feature analysis, reporting the prompt input.
+- Align Footwear off with preserving described socks/tights; correct Settings documentation.
+- Add six targeted regressions: Python21 and DOM8 pass, 10 existing preset/input results remain identical. Two GPU smoke images saved successfully.
+- Known limits remain: garment head/body fragments, extra heads and repeated viewpoints. Empty-string model-output frequency and a new multi-seed quality benchmark were not measured.
+
+Internal prompt compiler: moss-sheet-1.4.1. UI, sockets and workflow node names are unchanged.
+
 ## v0.2.0
 
 - Initial public release: MOSS-specific character-sheet designer and text/image subgraph workflow.

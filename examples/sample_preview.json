@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "compiler_revision": "moss-sheet-1.4.0",
+  "compiler_revision": "moss-sheet-1.4.1",
   "input_hash": "e461b2e48edfa55fde10689cda54875256db8c3282701d0db8ce9c38d1809c45",
   "canonical_state": {
     "kind": "moss_image_character_sheet",

@@ -36,6 +36,7 @@ export function normalizeState(s,max=16384) {
   ordered.part_prompts = Object.fromEntries(PART_IDS.filter(k => s.part_prompts[k]?.trim()).map(k => [k,s.part_prompts[k]]));
   ordered.appearance = Object.fromEntries(Object.keys(DEFAULT_STATE.appearance).map(k => [k,s.appearance[k]]));
   ordered.size = Object.fromEntries(Object.keys(DEFAULT_STATE.size).map(k => [k,s.size[k]]));
+  if (Object.hasOwn(s,'view_prompts')) ordered.view_prompts = {...s.view_prompts};
   return ordered;
 }
 export const parseState = (raw,max) => normalizeState(parseJSONStrict(raw),max);

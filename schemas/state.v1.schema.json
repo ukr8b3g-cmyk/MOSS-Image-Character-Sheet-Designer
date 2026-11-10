@@ -238,6 +238,64 @@
           "multipleOf": 16
         }
       }
+    },
+    "view_prompts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "face_front": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "face_left": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "face_right": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "face_3q_left": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "face_3q_right": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "face_back": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "body_front": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "body_left": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "body_back": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "clothing_front": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "clothing_back": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "hands": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "feet": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      }
     }
   },
   "$comment": "Preview accepts blank identity; execution requires at least one non-whitespace character. Runtime rejects bool/float/exponent tokens for integer fields; total input <= 64 KiB UTF-8. Bounds additionally use ComfyUI MAX_RESOLUTION."

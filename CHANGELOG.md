@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.0.1
+
+- Add the Prompts tab with 13 editable MOSS base instructions, Apply, per-view Reset and settings preview in English/Japanese.
+- Save optional per-view overrides with workflows, including explicit empty strings; restore on reload and validate the 2,000 UTF-16-unit limit.
+- Preserve edits through feature extraction, including empty outfit facts, in both Layout JSON and Caption output.
+- Keep unedited defaults, existing workflows, node identifiers/display names, sockets and model/sampling settings unchanged. Display names retain v1.0; package metadata is 1.0.1.
+- Python24 / JavaScript DOM9 pass; local Chrome persistence and live preview API checked. Feature preservation uses controlled feature JSON. No new encoder/GPU quality benchmark; garment fragments, repeated/missing views and image-to-text information loss remain possible.
+
 ## v1.0
 
 - Keep one user-facing Text or Image workflow in examples and attach it to this Release.

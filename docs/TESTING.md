@@ -1,5 +1,20 @@
 # Validation and limits
 
+## v1.0.1 prompt editing
+
+Tested locally with ComfyUI 0.44.0, frontend 1.57.6 and Python 3.12.12.
+
+- Python: 24 tests. New cases cover all 13 base instructions, explicit blank/reset behavior, UTF-16 limits, optional-state compatibility, and edited clothing/head instructions after controlled feature analysis in Layout JSON and Caption output.
+- JavaScript/DOM: 9 tests. The editor regression covers Apply, blank, Reset, serialize/restore, pending edits, invalid text and English/Japanese labels.
+- Chrome: a separate QA workflow saved and restored an edited portrait after page reload. Existing user workflows were not edited.
+- Live preview API: both formats retained edited garment instructions and exposed all 13 defaults.
+- No new encoder inference or GPU image generation was run for this release. Feature extraction was represented by controlled feature JSON; preservation tests do not establish visual compliance or real-model empty-outfit frequency.
+- Existing node identifiers, display names, sockets, default state and the supplied workflow remain unchanged. Edited states add an optional view_prompts map; older extension versions may reject that new field.
+- The preview is based on saved settings, not the connected input or final encoder-processed runtime prompt. Windows IME and Nodes 2.0 remain unverified.
+
+## Earlier validation (historical)
+
+
 Tested locally with ComfyUI 0.43.0, frontend 1.57.4 and Python 3.12.12.
 
 - Python: 21 tests for state, layout fixtures, dimensions, input contracts and feature compilation, including six regression tests added after the v0.2.0 audit.

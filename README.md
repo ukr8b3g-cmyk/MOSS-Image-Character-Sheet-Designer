@@ -1,4 +1,4 @@
-# MOSS-Image Character Sheet Designer v1.0
+# MOSS-Image Character Sheet Designer v1.0.1
 
 [日本語](README.ja.md) · [Download the workflow](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases/download/v1.0/MOSS-Image-Character-Sheet-Designer-v1.0.json) · [Releases](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
 
@@ -19,9 +19,13 @@ Describe **one character and their appearance only**. Include face, hair, propor
 
 <img width="1774" height="818" alt="Clip_42" src="https://github.com/user-attachments/assets/d99a725b-136a-43ff-b7ae-acaa532cc127" />
 
-## Version 1.0
+## New in 1.0.1: editable view prompts
 
-The node and package are **v1.0**. The internal prompt compiler remains **moss-sheet-1.4.1**, a separate implementation identifier. This release simplifies downloads and documentation and labels the node version; generation logic and the supplied workflow settings are unchanged. Earlier prompt-preservation fixes are retained; see [CHANGELOG](CHANGELOG.md) for details and known limitations.
+The **Prompts** tab after Settings lets you edit the MOSS base instruction for each of the 13 views. Select a view, edit its text, then use **Apply**. **Reset this prompt** restores that view's built-in instruction. An explicitly empty instruction is allowed; this clears only the base instruction, while connected input, applicable part prompts and settings are still added. Each instruction accepts up to **2,000 UTF-16 code units**.
+
+Edits are saved per node with the workflow, restored on reload, and preserved after encoder feature analysis in both Layout JSON and Caption output. **Part prompts** adds appearance details; **Prompts** replaces a view's base instruction. The settings preview does not show the connected input or the final encoder-processed runtime prompt.
+
+Existing workflows, node identifiers, display names (including **v1.0**), sockets, model selections and sampler settings are unchanged. Old workflows use the original defaults until edited. The package is **1.0.1**; the internal prompt compiler remains **moss-sheet-1.4.1**, a separate identifier. See [CHANGELOG](CHANGELOG.md).
 
 ## Installation
 
@@ -71,6 +75,7 @@ Try another seed when results vary; optionally compare CFG 3. It improved some t
 | Layout | Guide illustrations and panel positions; these are not generated images |
 | Part prompts / Style | Details for selected parts and a global rendering style |
 | Settings | Advanced options, warnings and saved JSON recovery |
+| Prompts | Edit/reset each view's base instruction and inspect the settings preview |
 
 UI language follows ComfyUI. State is saved per node and restored with the workflow. Invalid saved JSON is reported instead of silently replaced.
 
@@ -85,7 +90,7 @@ UI language follows ComfyUI. State is saved per node and restored with the workf
 
 The external `prompt` accepts up to **2,000 UTF-16 code units** (an emoji typically counts as two). This is this extension's character limit, not a MOSS token limit. Overlong or invalid Unicode input is rejected before internal analysis and is never silently truncated.
 
-Settings exposes saved JSON for recovery, not the final runtime prompt. The layout preview does not include the connected external prompt or encoder analysis.
+Settings exposes saved JSON for recovery. Prompts shows editable base instructions and a settings preview, not the final runtime prompt. Neither preview includes the connected external prompt or encoder analysis. Edits are stored in optional `view_prompts`; no migration or rewiring is required. Keep a copy of an edited workflow before opening it in an older extension version that does not understand this field.
 
 Connect `prompt` **directly to positive CLIPTextEncode**, and dimensions to EmptyFlux2LatentImage. Keep negatives in a separate CLIPTextEncode. The Designer has no negative output or visible CLIP input.
 
@@ -104,7 +109,7 @@ Image captioning and part analysis are separate operations; complex image-based 
 - Missing models/nodes: check paths above and update ComfyUI. Load Image's default filename is a placeholder; select your own image.
 - Old saved character/outfit fields are retained for compatibility, but the connected prompt is authoritative. Legacy `clothing_mode` is removed during normalization. Move old negative-output connections to a separate encoder; connected links are not silently deleted.
 
-Python/DOM tests and local GPU comparisons cover contracts, controls, text/image workflows and multiple subjects/seeds. They do not establish perfect visual compliance. See [validation](docs/TESTING.md). Physical Windows IME and Nodes 2.0 acceptance are not claimed.
+For 1.0.1, Python **24** and JavaScript/DOM **9** tests passed. Chrome save/reload restoration and the live preview API were checked locally (ComfyUI 0.44.0 / frontend 1.57.6 / Python 3.12.12). Feature-analysis preservation was tested with controlled feature JSON, including empty outfit facts; no new encoder/GPU generation or visual-quality benchmark was run for this release. Earlier GPU comparisons are historical evidence, not a guarantee that edited prompts render as requested. Physical Windows IME and Nodes 2.0 acceptance are not claimed. See [validation](docs/TESTING.md).
 
 ## License
 

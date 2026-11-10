@@ -1,4 +1,4 @@
-# MOSS-Image Character Sheet Designer v1.0
+# MOSS-Image Character Sheet Designer v1.0.1
 
 [English](README.md) · [ワークフローをダウンロード](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases/download/v1.0/MOSS-Image-Character-Sheet-Designer-v1.0.json) · [リリース](https://github.com/ukr8b3g-cmyk/MOSS-Image-Character-Sheet-Designer/releases)
 
@@ -19,9 +19,13 @@ Character Profileには**1人のキャラクターの外見だけ**を入力し�
 
 <img width="1774" height="818" alt="Clip_42" src="https://github.com/user-attachments/assets/c9b643e0-683f-41f2-ac2e-fa6455191dc2" />
 
-## バージョン1.0
+## 1.0.1の追加：ビュー別プロンプト編集
 
-ノードと製品版は**v1.0**です。内部プロンプト契約の**moss-sheet-1.4.1**は別の実装番号です。今回は配布ファイルと説明を整理し、ノードの版表示を揃えました。生成処理と配布ワークフローの設定は変更していません。従来の指示保持修正も引き継いでいます。修正履歴と制約は[CHANGELOG](CHANGELOG.md)を参照してください。
+Settingsの次にある **Prompts** タブから、13ビューそれぞれのMOSS基本指示を編集できます。ビューを選んで文章を変更し、**Apply**で反映します。**Reset this prompt**はそのビューの標準文に戻します。明示的な空欄も保存でき、基本指示だけを空にします。接続した入力・対象部位の補足・設定は別途加わります。各指示は **2,000 UTF-16単位**までです。
+
+編集はワークフロー内にノードごとに保存し、再読込で復元します。特徴整理後も保持し、Layout JSON／Caption両形式に適用します。**Part promptsは外見の補足を追加**し、**Promptsはビューの基本指示を置換**する機能です。設定プレビューは外部入力やTE整理後の最終生成文を表示するものではありません。
+
+既存ワークフロー、ノードID・表示名（**v1.0**を含む）、入出力、モデル・サンプラー設定は維持しています。未編集の既存ワークフローは標準文のまま動きます。製品版は **1.0.1**、内部プロンプト契約の **moss-sheet-1.4.1** は別の番号です。[CHANGELOG](CHANGELOG.md)も参照してください。
 
 ## 導入と必要モデル
 
@@ -66,6 +70,7 @@ Load CLIPのtypeは **`moss_image`**。確認済みTEの画像理解機能を共
 | Layout | 配置ガイド。人形は生成結果や生成へ渡す参照画像ではありません |
 | Part prompts / Style | 選択部位の補足と全体スタイル |
 | Settings | 詳細設定、警告、保存JSONの復旧 |
+| Prompts | ビュー別の基本指示を編集・標準文へ戻す、設定プレビュー |
 
 UI言語はComfyUIの設定に従います。設定はノードごとに保存し再読込で復元します。不正なJSONを勝手に置き換えることはありません。
 
@@ -76,7 +81,7 @@ UI言語はComfyUIの設定に従います。設定はノードごとに保存�
 
 外部`prompt`の上限は **2,000 UTF-16単位**です（絵文字などは通常2単位）。MOSSのトークン上限ではなく、この拡張の文字数制限です。超過・不正なUnicodeは内部解析の前に拒否し、入力を勝手に切り詰めません。
 
-Settingsは保存JSONの復旧欄で、実行時の最終プロンプト表示機能ではありません。配置プレビューには外部promptやTEの解析結果は含まれません。
+Settingsは保存JSONの復旧欄です。Promptsでは基本文と設定プレビューを確認できますが、外部promptやTEの解析結果を含む最終生成文ではありません。編集は任意の`view_prompts`欄へ保存し、既存ワークフローの移行・再配線は不要です。この欄に未対応の旧拡張で開く前には、編集済みワークフローのコピーを残してください。
 
 **prompt出力はpositiveのCLIPTextEncodeへ直接接続**してください。negativeは別のCLIPTextEncodeへ入力します。Designerにはnegative出力や可視CLIP入力はありません。
 
@@ -95,7 +100,7 @@ Settingsは保存JSONの復旧欄で、実行時の最終プロンプト表示�
 - Load Imageの初期ファイル名は仮置きです。画像モードでは自分の画像を選択してください。
 - 旧人物・衣装データは互換保持しますが、生成は接続したpromptを使用。旧clothing_modeは正規化で除去。旧negative出力の接続は外部negative欄へ移してください。接続済みリンクは勝手に削除しません。
 
-Python・DOMと、複数被写体／seedのローカルGPU比較を実施済みです。完全な画質合格を意味しません。[検証範囲](docs/TESTING.md)を参照してください。実Windows IME・Nodes 2.0は受入未確認です。
+1.0.1では **Python24件・JavaScript／DOM9件**が成功しました。Chromeで保存・再読込復元と実プレビューAPIを確認しています（ComfyUI 0.44.0／frontend 1.57.6／Python 3.12.12）。特徴整理後の保持は、空の衣装情報を含む制御した特徴JSONで検査しました。今回の新規TE／GPU生成・画質比較は未実施です。従来のGPU比較は過去の検証であり、編集した文章どおりの描画を保証しません。実Windows IME・Nodes 2.0は受入未確認です。[検証範囲](docs/TESTING.md)を参照してください。
 
 ## ライセンス
 

@@ -1,4 +1,4 @@
-__version__ = '1.0'
+__version__ = '1.0.1'
 from .moss_image_character_sheet.node import MOSSImageCharacterSheetDesigner, MOSSComposeScopedSheet
 from .moss_image_character_sheet.preview import register_preview
 

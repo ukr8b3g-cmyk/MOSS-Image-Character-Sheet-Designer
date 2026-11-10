@@ -67,3 +67,8 @@
 
 .moss-sheet-designer .moss-node-version { flex: none; color: #83d7c6; font-size: 12px; white-space: nowrap; }
 .moss-sheet-designer .moss-intro > span:nth-child(2) { margin-right: auto; }
+
+.moss-view-prompts summary { display:flex; justify-content:space-between; padding:10px; border:1px solid #586f81; border-radius:6px; cursor:pointer; margin-bottom:8px; font-weight:600; }
+.moss-view-prompts summary::after {content:"+";}
+.moss-view-prompts details[open]>summary::after {content:"−";}
+.moss-view-prompts select,.moss-view-prompts textarea {box-sizing:border-box;width:100%;margin-bottom:6px;}

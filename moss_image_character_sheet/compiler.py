@@ -52,6 +52,10 @@ def render_prompt(draft, layout, form):
         captions.append(caption)
     return '\n\n'.join([draft['summary']['caption']]+captions)
 
+def default_view_prompts(state):
+    concise = any(v.startswith('clothing_') for v in state['views']) or sum(v.startswith('face_') for v in state['views']) >= 3
+    return {v: C['compact_views'][v] if concise else C['view_prefix_'+C['views'][v]['label']]+C['views'][v]['caption'] for v in C['view_order']}
+
 def compile_state(state, layout):
     views, parts, appearance = state['views'], state['part_prompts'], state['appearance']
     summary = C['summary']
@@ -86,7 +90,7 @@ def compile_state(state, layout):
         v = panel['id']
         definition = C['views'][v]
         label = definition['label']
-        caption = C['compact_views'][v] if concise else C['view_prefix_'+label]+definition['caption']
+        caption = state.get('view_prompts', {}).get(v, default_view_prompts(state)[v])
         sections = [caption]
         for part in PARTS:
             if part in parts and v in C['part_visibility'][part]:
@@ -118,4 +122,4 @@ def preview(raw, runtime_max_resolution=16384):
     for condition,code in [(layout['density_score']<1,'dense_layout'),(len(state['views'])>=8,'many_views'),(state['size']['mode']=='manual' and w*h>4000000,'high_resolution'),(state['size']['mode']=='manual' and not .45<=w/h<=2.5,'extreme_aspect_ratio')]:
         if condition:
             warnings.append(dict(code=code,path='size',details=''))
-    return dict(schema_version=1,compiler_revision=REVISION,input_hash=state_hash(state),canonical_state=state,ready=ready,width=w,height=h,layout_plan=layout,**compiled,warnings=warnings,blocking_errors=[] if ready else [dict(code='E_IDENTITY_EMPTY',path='character.identity',details='')],token_status='not_measured')
+    return dict(default_view_prompts=default_view_prompts(state),schema_version=1,compiler_revision=REVISION,input_hash=state_hash(state),canonical_state=state,ready=ready,width=w,height=h,layout_plan=layout,**compiled,warnings=warnings,blocking_errors=[] if ready else [dict(code='E_IDENTITY_EMPTY',path='character.identity',details='')],token_status='not_measured')

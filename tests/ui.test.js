@@ -116,3 +116,20 @@ test('clothing cards and layout use garment symbols without a wearer',()=>{
   assert.equal(ui.root.querySelectorAll('.moss-card [data-artwork-source="garment-symbol"]').length,2);
   ui.dispose();c.dispose();dom.window.close();
 });
+
+test('view editor applies blank, resets, flushes, reloads and blocks invalid edits',()=>{
+ const dom=setup();let ui;
+ const c=new DesignerController({raw:raw(),requestPreview:()=>new Promise(()=>{}),onChange:(_,reason)=>ui?.render(reason)});
+ c.invalidate();c.preview={...JSON.parse(readFileSync(new URL("./fixtures/sample_preview.json",import.meta.url),"utf8")),default_view_prompts:Object.fromEntries(CONTRACT.view_order.map(v=>[v,'BASE '+v]))};c.previewRaw=c.raw;
+ ui=createDesignerUI({controller:c});document.body.append(ui.root);
+ ui.root.querySelector('[data-tab="prompts"]').click();const panel=ui.root.querySelector('.moss-view-prompts'),input=panel.querySelector('textarea');
+ assert.equal(input.value,'BASE face_front');
+ input.value='CUSTOM portrait';input.dispatchEvent(new Event('input'));ui.flushDrafts();
+ const saved=c.raw;assert.equal(JSON.parse(saved).view_prompts.face_front,'CUSTOM portrait');
+ c.restore(raw());c.restore(saved);assert.equal(input.value,'CUSTOM portrait');
+ input.value='';input.dispatchEvent(new Event('input'));panel.querySelector('button').click();assert.equal(c.state.view_prompts.face_front,'');
+ panel.querySelectorAll('button')[1].click();assert.equal(c.state.view_prompts,undefined);
+ c.restore(saved);input.value='x'.repeat(2001);input.dispatchEvent(new Event('input'));assert.throws(()=>ui.flushDrafts());assert.equal(c.raw,saved);
+ c.restore(saved);ui.setLocale('ja');assert.equal(ui.root.querySelector('[data-tab="prompts"]').textContent,'プロンプト');
+ ui.dispose();c.dispose();dom.window.close();
+});

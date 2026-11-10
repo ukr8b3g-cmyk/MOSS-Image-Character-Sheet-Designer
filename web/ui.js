@@ -232,7 +232,7 @@ export function createDesignerUI({controller, locale = 'ja', compatibilityWarnin
   clearStyle.dataset.clearStyle = ''; listen(clearStyle, 'click', () => act(() => writeStyle('none'))); styleStatus.append(styleBadge, clearStyle);
   const previewHead = element('div', 'moss-preview-head'), tabs = element('div', 'moss-tabs'), previewTag = element('span', 'moss-preview-tag');
   tabs.setAttribute('role', 'tablist'); const tabMap = new Map();
-  const tabNames = reference ? ['layout', 'parts', 'style', 'settings'] : ['layout', 'parts', 'settings'];
+  const tabNames = reference ? ['layout', 'parts', 'style', 'settings', 'prompts'] : ['layout', 'parts', 'settings', 'prompts'];
   for (const name of tabNames) {
     const tab = button('moss-tab'); tab.id = `${id}-${name}-tab`; tab.dataset.tab = name;
     tab.setAttribute('role', 'tab'); tab.setAttribute('aria-controls', `${id}-${name}-panel`);
@@ -298,12 +298,47 @@ export function createDesignerUI({controller, locale = 'ja', compatibilityWarnin
   listen(apply, 'click', () => act(() => {
     controller.applyRaw(rawInput.value);
     // A valid JSON replacement owns these values, even when the saved JSON is unchanged.
-    drafts.clear(); partDrafts.clear();  partComposing = false;
+    drafts.clear(); partDrafts.clear();  partComposing = false; viewDirty = false; viewComposing = false;
   })); jsonDetails.append(summary, rawInput, rawHint, apply);
   settingsPanel.append(modeHint, warning, footer, jsonDetails);
   root.append(header, cards, qualityBox, controls, metrics, errorBox, retry);
   root.append(previewHead, stage, partPanel, settingsPanel);
   if (reference) root.append(stylePanel);
+  const promptsPanel = element('div', 'moss-settings-panel moss-view-prompts');
+  promptsPanel.id = `${id}-prompts-panel`; promptsPanel.setAttribute('role','tabpanel'); promptsPanel.setAttribute('aria-labelledby',`${id}-prompts-tab`);
+  const viewEditor = element('details'), viewSummary = element('summary'), viewSelect = element('select'), viewInput = element('textarea'), viewHelp = element('p'), viewApply = button('moss-apply'), viewReset = button('moss-apply');
+  viewEditor.open = true; viewInput.rows = 6; viewInput.spellcheck = false;
+  let selectedView = viewIds[0], viewDirty = false, viewComposing = false;
+  for (const v of viewIds) { const o = element('option'); o.value=v; viewSelect.append(o); }
+  function saveView() {
+    if (!viewDirty) return;
+    if (viewComposing) throw new StateError('composition');
+    controller.change(s => {s.view_prompts ??= {}; s.view_prompts[selectedView]=viewInput.value;});
+    viewDirty=false;
+  }
+  listen(viewInput,'input',()=>{viewDirty=true;});
+  listen(viewInput,'compositionstart',()=>{viewComposing=true;});
+  listen(viewInput,'compositionend',()=>{viewComposing=false;viewDirty=true;});
+  listen(viewInput,'keydown',e=>e.stopPropagation());
+  listen(viewSelect,'change',()=>{const next=viewSelect.value;viewSelect.value=selectedView;act(saveView);if(viewDirty)return;selectedView=next;render();});
+  listen(viewApply,'click',()=>act(saveView));
+  listen(viewReset,'click',()=>act(()=>{controller.change(s=>{if(s.view_prompts){delete s.view_prompts[selectedView];if(!Object.keys(s.view_prompts).length)delete s.view_prompts;}});viewDirty=false;}));
+  viewEditor.append(viewSummary,viewSelect,viewInput,viewHelp,viewApply,viewReset);promptsPanel.append(viewEditor);
+  const viewPreview=element('details'), viewPreviewSummary=element('summary'), viewPreviewText=element('pre');viewPreviewText.style.whiteSpace='pre-wrap';viewPreview.append(viewPreviewSummary,viewPreviewText);promptsPanel.append(viewPreview);root.append(promptsPanel);
+  function renderViewEditor() {
+    const ja=language==='ja', state=controller.state, defaults=controller.isCurrentPreview ? controller.preview?.default_view_prompts : null;
+    viewPreviewSummary.textContent=ja?'ビュー別プロンプト（設定プレビュー）':'Per-view prompts (settings preview)';
+    viewPreviewText.textContent=(controller.preview?.layout_draft?.items??[]).map((item,i)=>`${state?.views[i]??''}: ${item.caption}`).join('\n\n');
+    viewSummary.textContent=ja?'ビュー別プロンプトを編集':'Edit view prompts';
+    viewSelect.setAttribute('aria-label',ja?'編集するビュー':'View to edit');
+    for(const o of viewSelect.options)o.textContent=t[o.value]??o.value;
+    viewSelect.value=selectedView; viewSelect.disabled=!state;
+    const own=Object.hasOwn(state?.view_prompts??{},selectedView);
+    if(!viewDirty)viewInput.value=own?state.view_prompts[selectedView]:(defaults?.[selectedView]??'');
+    viewInput.disabled=!state||(!own&&!defaults&&!viewDirty);viewInput.setAttribute('aria-label',viewSummary.textContent);
+    viewApply.textContent=ja?'適用':'Apply';viewReset.textContent=ja?'このプロンプトを初期化':'Reset this prompt';
+    viewHelp.textContent=ja?'MOSS用のビュー基本文を置換します。空欄も保存できます。外観情報・部位指示・設定・位置は別途追加されます。各2,000 UTF-16単位まで。':'Replace this MOSS view base instruction; blank is allowed. Appearance, part prompts, settings and positions are added separately. Up to 2,000 UTF-16 units each.';
+  }
   // Keep node dragging out of text controls, but let browser keyboard accessibility work.
   listen(root, 'pointerdown', event => event.stopPropagation());
   const resizeObserver = typeof ResizeObserver === 'function' ? new ResizeObserver(() => fitSheet()) : null;
@@ -328,10 +363,10 @@ export function createDesignerUI({controller, locale = 'ja', compatibilityWarnin
     const state = controller.state, prompts = state?.part_prompts ?? {}, draft = partDrafts.get(selectedPart);
     tabs.setAttribute('aria-label', t.diagram);
     for (const [name, tab] of tabMap) {
-      tab.textContent = name === 'layout' ? t.layoutTab : name === 'style' ? t.styleTab : name === 'settings' ? t.settingsTab : `${t.partsTab}${Object.keys(prompts).length ? ` (${Object.keys(prompts).length})` : ''}`;
+      tab.textContent = name === 'layout' ? t.layoutTab : name === 'style' ? t.styleTab : name === 'prompts' ? (language === 'ja' ? 'プロンプト' : 'Prompts') : name === 'settings' ? t.settingsTab : `${t.partsTab}${Object.keys(prompts).length ? ` (${Object.keys(prompts).length})` : ''}`;
       tab.setAttribute('aria-selected', String(name === activeTab)); tab.tabIndex = name === activeTab ? 0 : -1;
     }
-    stage.hidden = activeTab !== 'layout'; partPanel.hidden = activeTab !== 'parts'; stylePanel.hidden = activeTab !== 'style'; settingsPanel.hidden = activeTab !== 'settings';
+    stage.hidden = activeTab !== 'layout'; partPanel.hidden = activeTab !== 'parts'; stylePanel.hidden = activeTab !== 'style'; settingsPanel.hidden = activeTab !== 'settings'; promptsPanel.hidden = activeTab !== 'prompts';
     previewTag.textContent = activeTab === 'layout' ? t.diagram : ''; previewTag.title = t.caveat;
     const selectedStyle = readStyle();
     styleStatus.hidden = !reference || selectedStyle === 'none'; styleBadge.textContent = `${t.style}：${t[`style_${selectedStyle}`] ?? selectedStyle}`;
@@ -424,6 +459,8 @@ export function createDesignerUI({controller, locale = 'ja', compatibilityWarnin
   }
   function flushDrafts() {
     if (external) return;
+    if (viewComposing) throw new StateError('composition');
+    try { saveView(); } catch(error) { activeTab='prompts'; localError=error; render(); throw error; }
     if (partComposing) throw new StateError('composition');
 
 
@@ -438,7 +475,7 @@ export function createDesignerUI({controller, locale = 'ja', compatibilityWarnin
   function render(reason) {
     if (disposed) return;
     for (const control of root.querySelectorAll('input,textarea,select,button')) control.disabled = false;
-    if (reason === 'restore') { drafts.clear(); partDrafts.clear();  partComposing = false; customHeight = false; localError = null; }
+    if (reason === 'restore') { drafts.clear(); partDrafts.clear();  partComposing = false; viewDirty = false; viewComposing = false; customHeight = false; localError = null; }
     t = translations[language] ?? EN; root.lang = language;
     if (reason === 'commit' || reason === 'restore') token = null;
 
@@ -459,7 +496,7 @@ export function createDesignerUI({controller, locale = 'ja', compatibilityWarnin
     sizeLabel.textContent = t.size;
     modeHint.textContent = state?.size.mode === 'manual' ? t.manualHint : t.autoHint;
     modeGroup.title = modeHint.textContent;
-    renderFields(); renderParts(); renderRoles();
+    renderFields(); renderParts(); renderRoles(); renderViewEditor();
     const p = controller.preview, actual = displayOutput(), displayP = actual && state;
     dimensions.textContent = displayP ? `${actual.width.toLocaleString('en-US')} × ${actual.height.toLocaleString('en-US')}` : '— × —';
     const pixelCount = displayP ? actual.width * actual.height : 0;

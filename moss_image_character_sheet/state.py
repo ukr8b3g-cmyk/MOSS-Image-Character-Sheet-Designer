@@ -70,7 +70,13 @@ def parse_state(raw, runtime_max_resolution=16384):
     if length > 65536:
         fail('E_STATE_SIZE')
     s = strict_load(raw)
-    keys(s, DEFAULT, 'state_json')
+    if type(s) is not dict:
+        fail('E_TYPE')
+    keys({k:v for k,v in s.items() if k != 'view_prompts'}, DEFAULT, 'state_json')
+    overrides = {}
+    if 'view_prompts' in s:
+        keys(s['view_prompts'], VIEWS, 'view_prompts', optional=True)
+        overrides = {k:text(v,2000,'view_prompts.'+k) for k,v in s['view_prompts'].items()}
     if s['kind'] != DEFAULT['kind'] or type(s['schema_version']) is not int or s['schema_version'] != 1:
         fail('E_SCHEMA')
     views = s['views']
@@ -111,9 +117,13 @@ def parse_state(raw, runtime_max_resolution=16384):
             if value % 16:
                 fail('E_SIZE_STEP', 'size.' + k)
         size[k] = value
-    return dict(kind=DEFAULT['kind'], schema_version=1, views=[v for v in VIEWS if v in views], character=character, part_prompts=parts, appearance=appearance,
+    result = dict(kind=DEFAULT['kind'], schema_version=1, views=[v for v in VIEWS if v in views], character=character, part_prompts=parts, appearance=appearance,
                 style=enum(s['style'], CONTRACT['styles'], 'style'), background=enum(s['background'], CONTRACT['backgrounds'], 'background'),
                 prompt_format=enum(s['prompt_format'], ('auto','caption','layout_json'), 'prompt_format'), negative_prompt=text(s['negative_prompt'],4000,'negative_prompt'), size=size)
+
+    if 'view_prompts' in s:
+        result['view_prompts'] = overrides
+    return result
 
 def state_hash(state):
     return hashlib.sha256(compact(state).encode('utf-8')).hexdigest()

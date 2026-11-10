@@ -33,7 +33,8 @@ def apply_features(result, state, features):
     explicit_garments = {
         v for v in views if v.startswith('clothing_') and (
             any(state['part_prompts'].get(part) and v in C['part_visibility'][part] for part in C['part_order'])
-            or state['appearance']['clothing_type'] != 'auto')
+            or state['appearance']['clothing_type'] != 'auto'
+            or v in state.get('view_prompts', {}))
     }
     if head_only:
         numbers = ('zero','one','two','three','four','five','six')

@@ -1,0 +1,5 @@
+# Keep runtime files, artwork, documentation and the original workflow.
+# Development tests and CI configuration are not needed by ComfyUI.
+tests/
+verification/
+.github/
